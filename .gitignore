@@ -1,0 +1,11 @@
+# Project exclude paths
+/out/
+*.iml
+out
+gen
+.idea/
+target/
+build/
+.allure/
+lib/
+cucumber-html-reports/
