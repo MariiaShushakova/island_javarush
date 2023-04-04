@@ -118,6 +118,13 @@ public class Cell {
         return count;
     }
 
+    public void setNearCell(CellConfig sellConfig) {
+        mapOfDirections.put(Direction.TOP, sellConfig.getCell(this.col, this.row - 1));
+        mapOfDirections.put(Direction.BOTTOM, sellConfig.getCell(this.col, this.row + 1));
+        mapOfDirections.put(Direction.LEFT, sellConfig.getCell(this.col - 1, this.row));
+        mapOfDirections.put(Direction.RIGHT, sellConfig.getCell(this.col + 1, this.row));
+    }
+
     @Override
     public String toString() {
         return "Cell{" + name + '\'' +

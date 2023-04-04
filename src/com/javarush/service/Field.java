@@ -13,10 +13,10 @@ public class Field{
     private static Field field = null; //Singleton
     private GameFactory factory;
     private static Stats statistics;
-    private final Map<String, Cell> cells;
+    private CellConfig cellConfig;;
 
     private Field(int length, int width) {
-        this.cells = createField(length, width);
+        this.cellConfig = new CellConfig(length, width);
         this.factory = new GameFactory();
         statistics = new Stats();
 
@@ -32,22 +32,10 @@ public class Field{
         return field;
     }
 
-    private Map<String, Cell> createField(int fieldLength, int fieldWidth) {
-        Map<String, Cell> cellHashMap = new TreeMap<>();
-
-        for (int rowIndex = 0; rowIndex < fieldWidth; rowIndex++) {
-            for (int columnIndex = 0; columnIndex < fieldLength; columnIndex++) {
-                Cell cell = new Cell(columnIndex, rowIndex);
-                cellHashMap.put(cell.name, cell);
-            }
-        }
-        return cellHashMap;
-    }
-
     /**
      * Put animals on the field before game.*/
     private void fillTheField() {
-        for (Cell cell : cells.values().toArray(new Cell[0])) {
+        for (Cell cell : cellConfig.getAllCell()) {
             AnimalType[] types = AnimalType.values();
 
             for (AnimalType type : types) {
@@ -83,7 +71,7 @@ public class Field{
 
     public int currentCountOfAnimal() {
         int count = 0;
-        for (Cell cell : cells.values().toArray(new Cell[0])) {
+        for (Cell cell :cellConfig.getAllCell()) {
             count += cell.getCountOfAnimalOfTheCell();
         }
         return count;
@@ -91,7 +79,7 @@ public class Field{
 
     public double countGrass() {
         double count = 0;
-        for (Cell cell : cells.values().toArray(new Cell[0])) {
+        for (Cell cell : cellConfig.getAllCell()) {
             count += cell.grass.getWeight();
         }
         return count;
@@ -104,7 +92,7 @@ public class Field{
     }
 
     public void animalsMove() {
-        for (Cell cell : cells.values().toArray(new Cell[0])) {
+        for (Cell cell : cellConfig.getAllCell()) {
             for (Animal animal : cell.getAllAnimalFromCurrentCell()) {
                 animal.move();
             }
@@ -112,7 +100,7 @@ public class Field{
     }
 
     public void animalsEat() {
-        for (Cell cell : cells.values().toArray(new Cell[0])) {
+        for (Cell cell : cellConfig.getAllCell()) {
             for (Animal animal : cell.getAllAnimalFromCurrentCell()) {
                 animal.eat();
             }
@@ -120,7 +108,7 @@ public class Field{
     }
 
     public void animalsReproduced() {
-        for (Cell cell : cells.values().toArray(new Cell[0])) {
+        for (Cell cell : cellConfig.getAllCell()) {
             ArrayList<AnimalType> types = new ArrayList<>();
             for (Animal animal : cell.getAllAnimalFromCurrentCell()) {
                 if (!types.contains(animal.type)){
@@ -132,7 +120,7 @@ public class Field{
     }
 
     public void  animalsBecomeHungry() {
-        for (Cell cell : cells.values().toArray(new Cell[0])) {
+        for (Cell cell : cellConfig.getAllCell()) {
             for (Animal animal : cell.getAllAnimalFromCurrentCell()) {
                 animal.becomeHungry();
             }
@@ -140,7 +128,7 @@ public class Field{
     }
 
     public void growGrassInTheField() {
-        for (Cell cell : cells.values().toArray(new Cell[0])) {
+        for (Cell cell : cellConfig.getAllCell()) {
             cell.grass.growth();
         }
     }
@@ -151,7 +139,7 @@ public class Field{
         for (AnimalType type : types) {
             if (!type.equals(AnimalType.PLANT)) {
                 int countAllAnimal = 0;
-                for (Cell cell : cells.values().toArray(new Cell[0])) {
+                for (Cell cell : cellConfig.getAllCell()) {
                     countAllAnimal += cell.getCountTheTypeOfAnimalOfTheCell(type);
                 }
                 int countBornAnimal = Stats.mapBirthNewAnimal.get(type);
@@ -162,8 +150,4 @@ public class Field{
         System.out.println(result);
     }
 
-    public void printInfo(){
-        for (Map.Entry<String, Cell> entry: cells.entrySet())
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-    }
 }
